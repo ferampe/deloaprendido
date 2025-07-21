@@ -1,38 +1,61 @@
-# Como conectar por SSH a un servidor VPS
+# ¿Cómo conectarse a tu servidor VPS por ssh de forma segura y rapida?
 
-Pare indicarle que nuestro servidor VPS que confie en nuestra conexion, debemos hacer la siguiente configuración.
+Si trabajas con servidores remotos de manera frecuente, esta configuración te ayudara a tener una conexión segura y muy rapida, con llaves publicas y privadas SSH y un archivo config.
 
-1. Crear nuestra llave publica y privada en nuestro equipo local
-
+## Paso 1: Generar tu llave publica y privada en tu equioi local
+Desde tu terminal local:
 ```
 ssh-keygen
 ```
 
-Aqui saldra una mensaje para poner el nombre de la llave, en mi caso por ejemplo vps_server1.
-Luego nos pedira una clave, es mas seguro configurarle clave pero la ventaja es que podamos confiar en el equipo, asi que se puede dejar en blanco, se tiene que dar ENTER 2 veces.
 
-Luego copiar la clave, abrimos con el comando cat la llave publica
+```
+Generating public/private ed25523 key pair.
+Enter file in which to save the key (/home/user/.ssh/id_ed25523): vps_server1
+
+```
+
+```
+Enter passphrase (empty for no passphrase):
+```
+
+
+> **Nota:** Puedes darle un nombre personalizado, por ejemplo: vps_server1.
+Cuando te pida una contraseña, puedes dejarla en blanco para una conexión rápida desde un equipo confiable (aunque por seguridad es mejor usar una clave).
+
+## Paso 2: Copiar la clave publica
 
 ```
 cat ~/.ssh/vps_server1.pub
 ```
-Copiamos todo el contenido
+copia el codigo completo
 
+## Paso 3: Agregar la clave publica al servidor VPS
+Conectate a tu VPS crea (si no existe) la carpeta .ssh y el archivo authorized_keys
+```
+mkdir ~/.ssh
+vim ~/.ssh/authorized_keys
+```
+Pega ahi la clave publica que copiaste.
 
-Luego nos vamos a nuestro servidor VPS
-
-nos dirigimos a la carpeta ~/.ssh y dentro creamos un archivo llamado authorized_keys y pegamos el codigo copiado de la llave publica local.
-
-Ahora podemos conectarnos de ls siguiente manera desde nuestro equipo local
+## Paso 4: Conectate usando tu llave privada
+Desde tu equipo local
 
 ```
 ssh root@ip_del_vps ~/.ssh/vps_serve1
 ```
 
-Si queremos acortar este metodo de conexion, podemos crear un archivo config y conectarnos mas facilmente, dentro de la carpeta .ssh creamos un archivo llamado config sin ninguna extensión y ponemso los siguiente valores
+## Paso 5: Mejora tu agilidad de conexión
+Podemos crear un archivo config y conectarnos de forma mas rapida.
+
+Creamos un archivo config (sin extensión) dentro de la carpeta .ssh
 
 ```
+vim config
+```
+añade lo siguiente, reemplaza ip_del_vps
 
+```
 ServerAliveInterval 120
 ServerAliveCountMax 3
 
@@ -42,8 +65,9 @@ Host server1
         IdentityFile /home/user/.ssh/vps_server1
 ```
 
-Ahora podemos conestarnos de la siguiente forma
+Luego solo conectate de la siguiente manera
 
 ```
 ssh server1
 ```
+
